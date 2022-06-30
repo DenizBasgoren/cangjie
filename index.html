@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cangjie</title>
+    <style>
+        #input {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            padding: 5px;
+            height: 50px;
+            background-color: transparent;
+            color: wheat;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #input > * {
+            margin: 3px;
+        }
+        #input>button {
+            flex:1;
+            height: 100%;
+            color: white;
+            background-color: #101010;
+            border-color: #060610;
+        }
+        #input>input {
+            flex:2;
+            height: 90%;
+            color: white;
+            background-color: #101010;
+            border-color: #101010;
+        }
+        #red {
+            color:red;
+        }
+        html,body {
+            height: 100%;
+            background-color: #112234;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* mobile*/ 
+        @media (max-width:600px)  {
+            #img1, #img2 {
+                width: 100%;
+            }
+
+            #answer > span {
+                font-size: 1.5em;
+            }
+
+            #char {
+                font-size: 15em;
+            }
+            
+        }
+
+        /* not mobile */
+        @media (min-width:601px) {
+
+            /* #input {
+                display: none;
+            } */
+            #img1 {
+                display: block;
+                position: fixed;
+                right: 0;
+                top: 0;
+                opacity: .02;
+            }
+            #img2 {
+                display: block;
+                position: fixed;
+                left: 0;
+                top: 0;
+                opacity: .02;
+            }
+
+            #img1:hover, #img2:hover {
+                opacity: 1;
+            }
+
+            #answer > span {
+                font-size: 2em;
+            }
+
+            #char {
+                font-size: 20em;
+            }
+
+            html,body {
+                overflow-y: hidden;
+            }
+
+        }
+
+        #char {
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+        #char > span {
+            display: block;
+        }
+
+        #answer {
+            color: white;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        #answer > span {
+            display: block;
+        }
+
+        #centerthing {
+            margin-bottom: 100%;
+        }
+
+        .yellow {
+            color: gold;
+        }
+        .green {
+            color: green;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- <input id=stroke placeholder="Eg. 3-5 (inclusive)"type="text"> -->
+    <div id="centerthing">
+        <div id="char">
+            <span id="king"></span>
+        </div>
+        <div id="answer">
+            <span id="turtle">黭,21,吅,黑,弇,WFORT</span>
+            <span id="rainbow">WFORT</span>
+        </div>
+    </div>
+    <img id=img1 src="cangjie-key.jpg" alt="[Cangjie Image 1]"/>
+    <img id=img2 src="cangjie-key2.gif" alt="[Cangjie Image 2]"/>
+
+    <div id='input'>
+        <input type="text" autofocus>
+        <!-- <button>Prev</button> -->
+        <button onclick="toggleAnswer()">Answer (space)</button>
+        <button onclick="pickNewChar()">Next (enter)</button>
+    </div>
+
+
+<script>
+
+let input = document.querySelector('#input input')
+input.value = ''
+let inputCangjie
+input.oninput = e => {
+    // input.innerHTML = `<span id=red>${input.innerText}</span>`
+    inputCangjie = e.target.value = e.target.value.trim()
+    e.stopPropagation()
+    updateRainbow()
+    
+}
+
+input.onkeypress = e => {
+    if (e.code == 'Space') toggleAnswer()
+    if (e.code == 'Enter') pickNewChar()
+}
+
+let answerString, answerCangjie
+function pickNewChar() {
+    let ind = Math.floor(Math.random()*db.length)
+    document.getElementById('king').innerText = db[ind][0]
+    answerString = db[ind].join(',')
+    let t =document.getElementById('turtle')
+    t.innerText = answerString
+    t.style.visibility = 'hidden'
+    answerCangjie = db[ind][5]
+    input.value = inputCangjie = ''
+    document.getElementById('rainbow').innerText = ''
+
+}
+
+function toggleAnswer() {
+    let s = document.getElementById('turtle')
+    if (s.style.visibility == 'hidden') s.style.visibility = ''
+    else s.style.visibility = 'hidden'
+}
+
+function updateRainbow() {
+    let n = inputCangjie.toLowerCase().split('')
+    let a = answerCangjie.toLowerCase().split('')
+    for (let i = 0; i<n.length; i++) {
+        if (n[i]==a[i]) {
+            n[i] = a[i] = '=' + a[i] // green
+        }
+    }
+    for (let i = 0; i<n.length; i++) {
+        if (n[i][0]=='=') continue
+        for (let j = 0; j<a.length; j++) {
+            if (a[j][0]=='=' || n[i][0]=='~') continue
+            if (a[j]==n[i]) {
+                a[j] = n[i] = '~' + n[i]
+                break
+            }
+        }
+    }
+
+    let r = document.getElementById('rainbow')
+    r.innerHTML = n.map(a => {
+        if ( a[0]=='=' ) return `<span class=green>${a[1].toUpperCase()}</span>`
+        if ( a[0]=='~' ) return `<span class=yellow>${a[1].toUpperCase()}</span>`
+        return a[0].toUpperCase()
+    }).join('')
+
+    if (inputCangjie.toLowerCase()==answerCangjie.toLowerCase()) r.innerHTML += '<span class=green>!</span>'
+    
+}
+
+
+
+
+let db
+if (!localStorage.db) {
+    fetch('db.txt').then(l => l.text()).then(t => {
+        localStorage.db = db = t
+        setUpDB()
+    })
+}
+else {
+    db = localStorage.db
+    setUpDB()
+}
+
+function setUpDB() {
+    db = db.split('\n').map(r => {
+        let ar = r.split(',')
+        ar[1] = Number(ar[1])
+        return ar
+    })
+    pickNewChar()
+}
+
+
+
+// let strokeFrom, strokeTo
+// let strokeInput = document.getElementById('stroke')
+// if (!localStorage.stroke) {
+//     strokeFrom = 3; strokeTo = 20
+//     strokeInput.value = localStorage.stroke = `${strokeFrom}-${strokeTo}`
+// }
+// else {
+//     strokeFrom = Number(localStorage.stroke.split('-')[0]) || 3
+//     strokeTo = Number(localStorage.stroke.split('-')[1]) || 20
+//     if (strokeFrom > strokeTo || strokeFrom<1 || strokeTo>48) {
+//         strokeFrom = 3; strokeTo = 20
+//     }
+//     strokeInput.value = localStorage.stroke = `${strokeFrom}-${strokeTo}`
+// }
+// strokeInput.oninput = e => {
+//     strokeFrom = Number(e.target.value.split('-')[0]) || 3
+//     strokeTo = Number(e.target.value.split('-')[1]) || 20
+//     if (strokeFrom > strokeTo || strokeFrom<1 || strokeTo>48) {
+//         strokeFrom = 3; strokeTo = 20
+//     }
+//     localStorage.stroke = `${strokeFrom}-${strokeTo}`
+// }
+
+// let indexes = []
+// let currentIndex = 0
+
+// let lastStrokeFrom, lastStrokeTo
+// function pickNewChar() {
+//     let startingIndex, lastIndex
+//     let _started = false
+//     for (let i = 0; i<db.length; i++) {
+//         if (_started) {
+//             if (db[i][1] >= strokeFrom) {
+//                 startingIndex = i
+//                 _started = true
+//             }
+//         }
+//         else {
+//             if (db[i][1] > strokeTo) {
+//                 lastIndex = i-1
+//             }
+//         }
+//     }
+
+
+// }
+
+
+
+</script>
+</body>
+</html>
