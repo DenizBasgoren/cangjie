@@ -41,7 +41,7 @@
             color:red;
         }
         html,body {
-            height: 100%;
+            min-height: 100%;
             background-color: #112234;
         }
 
@@ -60,7 +60,7 @@
             }
 
             #char {
-                font-size: 15em;
+                font-size: 5em;
             }
             
         }
@@ -125,7 +125,7 @@
         }
 
         #centerthing {
-            margin-bottom: 100%;
+            margin-bottom: 130%;
         }
 
         .yellow {
@@ -162,12 +162,15 @@
 
 <script>
 
+let greenCombo = 0
+let roundIsOver = false
+
 let input = document.querySelector('#input input')
 input.value = ''
 let inputCangjie
 input.oninput = e => {
     // input.innerHTML = `<span id=red>${input.innerText}</span>`
-    inputCangjie = e.target.value = e.target.value.trim()
+    inputCangjie = e.target.value = e.target.value.trim().split('').filter(a => /^[a-zA-Z]$/.test(a)).join('')
     e.stopPropagation()
     updateRainbow()
     
@@ -189,12 +192,15 @@ function pickNewChar() {
     answerCangjie = db[ind][5]
     input.value = inputCangjie = ''
     document.getElementById('rainbow').innerText = ''
-
+    roundIsOver = false
 }
 
 function toggleAnswer() {
     let s = document.getElementById('turtle')
-    if (s.style.visibility == 'hidden') s.style.visibility = ''
+    if (s.style.visibility == 'hidden') {
+        s.style.visibility = ''
+        if (!roundIsOver) greenCombo = -1
+    }
     else s.style.visibility = 'hidden'
 }
 
@@ -208,6 +214,7 @@ function updateRainbow() {
     }
     for (let i = 0; i<n.length; i++) {
         if (n[i][0]=='=') continue
+        if (!roundIsOver) greenCombo = -1
         for (let j = 0; j<a.length; j++) {
             if (a[j][0]=='=' || n[i][0]=='~') continue
             if (a[j]==n[i]) {
@@ -224,7 +231,12 @@ function updateRainbow() {
         return a[0].toUpperCase()
     }).join('')
 
-    if (inputCangjie.toLowerCase()==answerCangjie.toLowerCase()) r.innerHTML += '<span class=green>!</span>'
+    if (inputCangjie.toLowerCase()==answerCangjie.toLowerCase()) {
+        r.innerHTML += '<span class=green>!</span>'
+        if (!roundIsOver) greenCombo++
+        roundIsOver = true
+        if (greenCombo) r.innerHTML += `&nbsp; <span class=green>(${greenCombo})</span>`
+    }
     
 }
 
