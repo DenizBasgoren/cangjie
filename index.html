@@ -55,6 +55,10 @@
                 width: 100%;
             }
 
+            #img2 {
+                margin-bottom: 50px;
+            }
+
             #answer > span {
                 font-size: 1.5em;
             }
@@ -164,6 +168,7 @@
 
 let greenCombo = 0
 let roundIsOver = false
+let greenHighscore = 0
 
 let input = document.querySelector('#input input')
 input.value = ''
@@ -193,6 +198,7 @@ function pickNewChar() {
     input.value = inputCangjie = ''
     document.getElementById('rainbow').innerText = ''
     roundIsOver = false
+    if (greenCombo == -1) greenCombo = 0
 }
 
 function toggleAnswer() {
@@ -233,7 +239,13 @@ function updateRainbow() {
 
     if (inputCangjie.toLowerCase()==answerCangjie.toLowerCase()) {
         r.innerHTML += '<span class=green>!</span>'
-        if (!roundIsOver) greenCombo++
+        if (!roundIsOver) {
+            greenCombo++
+            if (greenCombo > greenHighscore) {
+                greenHighscore = greenCombo
+                console.log(`Highscore: ${greenHighscore}`)
+            }
+        }
         roundIsOver = true
         if (greenCombo) r.innerHTML += `&nbsp; <span class=green>(${greenCombo})</span>`
     }
