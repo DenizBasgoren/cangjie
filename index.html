@@ -213,6 +213,11 @@ function toggleAnswer() {
 function updateRainbow() {
     let n = inputCangjie.toLowerCase().split('')
     let a = answerCangjie.toLowerCase().split('')
+
+    if (inputCangjie===answerCangjie) {
+        n = a.map(o=>o)
+    }
+
     for (let i = 0; i<n.length; i++) {
         if (n[i]==a[i]) {
             n[i] = a[i] = '=' + a[i] // green
