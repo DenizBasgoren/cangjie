@@ -157,7 +157,7 @@
     <img id=img2 src="cangjie-key2.gif" alt="[Cangjie Image 2]"/>
 
     <div id='input'>
-        <input type="text" autofocus>
+        <input id='gate' type="text" autofocus>
         <!-- <button>Prev</button> -->
         <button onclick="toggleAnswer()">Answer (space)</button>
         <button onclick="pickNewChar()">Next (enter)</button>
@@ -184,6 +184,7 @@ input.oninput = e => {
 input.onkeypress = e => {
     if (e.code == 'Space') toggleAnswer()
     if (e.code == 'Enter') pickNewChar()
+    document.getElementById('gate').focus()
 }
 
 let answerString, answerCangjie
