@@ -42,8 +42,8 @@
         }
         html,body {
             min-height: 100%;
-            background-color: #112234;
-            /* background-color: #261134; */
+            /* background-color: #112234; */
+            background-color: #261134;
         }
 
         * {
@@ -160,7 +160,7 @@
     <form autocomplete="off" method="post" action="">
         <input autocomplete="false" name="hidden" type="text" style="display:none;">
         <div id='input'>
-            <input type="text" autofocus autocomplete="off">
+            <input type="text" autofocus autocomplete="new-password">
             <!-- <button>Prev</button> -->
             <button onclick="toggleAnswer()">Answer (space)</button>
             <button onclick="pickNewChar()">Next (enter)</button>
@@ -188,9 +188,6 @@ input.oninput = e => {
 input.onkeypress = e => {
     if (e.code == 'Space') toggleAnswer()
     if (e.code == 'Enter') pickNewChar()
-    setTimeout(() => {
-        input.focus()
-    }, 1000)
 }
 
 let answerString, answerCangjie
@@ -206,6 +203,11 @@ function pickNewChar() {
     document.getElementById('rainbow').innerText = ''
     roundIsOver = false
     if (greenCombo == -1) greenCombo = 0
+
+    setTimeout(() => {
+        input.focus()
+        input.click()
+    }, 100)
 }
 
 function toggleAnswer() {
