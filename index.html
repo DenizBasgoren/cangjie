@@ -42,8 +42,9 @@
         }
         html,body {
             min-height: 100%;
-            background-color: #112234;
+            /* background-color: #112234; */
             /* background-color: #261134; */
+            background-color: #113413;
         }
 
         * {
@@ -159,10 +160,10 @@
 
     <form>
     <div id='input'>
-        <input id="theinput" type="text" autofocus aria-autocomplete="none" aria-haspopup="false" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input id="theinput" type="text" spellcheck="false">
         <!-- <button>Prev</button> -->
-        <button id="answerbtn" onclick="toggleAnswer()">Answer (space)</button>
         <input id="nextbtn" onclick="pickNewChar()" type="submit" value="Next (enter)">
+        <button id="answerbtn" onclick="toggleAnswer()">Answer (space)</button>
     </div>
     </form>
 
@@ -188,6 +189,18 @@ input.onkeypress = e => {
     if (e.code == 'Enter') pickNewChar()
 }
 
+document.getElementById('nextbtn').onmousedown = e => {
+    e.preventDefault()
+}
+
+window.onload = () => {
+    setTimeout(() => {
+        let input = document.getElementById('theinput')
+        input.focus()
+        input.click()
+    }, 100)
+}
+
 let answerString, answerCangjie
 function pickNewChar() {
     let ind = Math.floor(Math.random()*db.length)
@@ -202,12 +215,12 @@ function pickNewChar() {
     roundIsOver = false
     if (greenCombo == -1) greenCombo = 0
 
-    setTimeout(() => {
-        input.focus()
-        input.click()
-    }, 10)
+    // setTimeout(() => {
+    //     input.focus()
+    //     input.click()
+    // }, 10)
 }
-
+10
 function toggleAnswer() {
     let s = document.getElementById('turtle')
     if (s.style.visibility == 'hidden') {
