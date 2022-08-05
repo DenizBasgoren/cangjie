@@ -42,7 +42,8 @@
         }
         html,body {
             min-height: 100%;
-            background-color: #112234;
+            /* background-color: #112234; */
+            background-color: #261134;
         }
 
         * {
@@ -156,12 +157,15 @@
     <img id=img1 src="cangjie-key.jpg" alt="[Cangjie Image 1]"/>
     <img id=img2 src="cangjie-key2.gif" alt="[Cangjie Image 2]"/>
 
-    <div id='input'>
-        <input id='gate' type="text" autofocus>
-        <!-- <button>Prev</button> -->
-        <button onclick="toggleAnswer()">Answer (space)</button>
-        <button onclick="pickNewChar()">Next (enter)</button>
-    </div>
+    <form autocomplete="off" method="post" action="">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        <div id='input'>
+            <input type="text" autofocus>
+            <!-- <button>Prev</button> -->
+            <button onclick="toggleAnswer()">Answer (space)</button>
+            <button onclick="pickNewChar()">Next (enter)</button>
+        </div>
+    </form>
 
 
 <script>
@@ -184,7 +188,9 @@ input.oninput = e => {
 input.onkeypress = e => {
     if (e.code == 'Space') toggleAnswer()
     if (e.code == 'Enter') pickNewChar()
-    document.getElementById('gate').focus()
+    setTimeout(() => {
+        input.focus()
+    }, 1000)
 }
 
 let answerString, answerCangjie
