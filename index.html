@@ -42,8 +42,8 @@
         }
         html,body {
             min-height: 100%;
-            /* background-color: #112234; */
-            background-color: #261134;
+            background-color: #112234;
+            /* background-color: #261134; */
         }
 
         * {
@@ -160,7 +160,7 @@
     <form autocomplete="off" method="post" action="">
         <input autocomplete="false" name="hidden" type="text" style="display:none;">
         <div id='input'>
-            <input type="text" autofocus>
+            <input type="text" autofocus autocomplete="off">
             <!-- <button>Prev</button> -->
             <button onclick="toggleAnswer()">Answer (space)</button>
             <button onclick="pickNewChar()">Next (enter)</button>
@@ -264,6 +264,12 @@ function updateRainbow() {
     
 }
 
+
+
+
+document.getElementsByTagName('form')[0].onsubmit = e => {
+    e.preventDefault()
+}
 
 
 
