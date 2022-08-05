@@ -160,7 +160,7 @@
 
     <form>
     <div id='input'>
-        <input id="theinput" type="text" spellcheck="false">
+        <input id="theinput" type="text" spellcheck="false" autocomplete="new-password">
         <!-- <button>Prev</button> -->
         <input id="nextbtn" onclick="pickNewChar()" type="submit" value="Next (enter)">
         <button id="answerbtn" onclick="toggleAnswer()">Answer (space)</button>
@@ -198,7 +198,7 @@ window.onload = () => {
         let input = document.getElementById('theinput')
         input.focus()
         input.click()
-    }, 100)
+    }, 1000)
 }
 
 let answerString, answerCangjie
