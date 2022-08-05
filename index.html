@@ -23,14 +23,14 @@
         #input > * {
             margin: 3px;
         }
-        #input>button {
+        #nextbtn, #answerbtn {
             flex:1;
             height: 100%;
             color: white;
             background-color: #101010;
             border-color: #060610;
         }
-        #input>input {
+        #theinput {
             flex:2;
             height: 90%;
             color: white;
@@ -42,8 +42,8 @@
         }
         html,body {
             min-height: 100%;
-            /* background-color: #112234; */
-            background-color: #261134;
+            background-color: #112234;
+            /* background-color: #261134; */
         }
 
         * {
@@ -157,16 +157,14 @@
     <img id=img1 src="cangjie-key.jpg" alt="[Cangjie Image 1]"/>
     <img id=img2 src="cangjie-key2.gif" alt="[Cangjie Image 2]"/>
 
-    <form autocomplete="off" method="post" action="">
-        <input autocomplete="false" name="hidden" type="text" style="display:none;">
-        <div id='input'>
-            <input type="text" autofocus autocomplete="new-password">
-            <!-- <button>Prev</button> -->
-            <button onclick="toggleAnswer()">Answer (space)</button>
-            <button onclick="pickNewChar()">Next (enter)</button>
-        </div>
+    <form>
+    <div id='input'>
+        <input id="theinput" type="text" autofocus aria-autocomplete="none" aria-haspopup="false" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
+        <!-- <button>Prev</button> -->
+        <button id="answerbtn" onclick="toggleAnswer()">Answer (space)</button>
+        <input id="nextbtn" onclick="pickNewChar()" type="submit" value="Next (enter)">
+    </div>
     </form>
-
 
 <script>
 
@@ -174,7 +172,7 @@ let greenCombo = 0
 let roundIsOver = false
 let greenHighscore = 0
 
-let input = document.querySelector('#input input')
+let input = document.querySelector('#theinput')
 input.value = ''
 let inputCangjie
 input.oninput = e => {
@@ -207,7 +205,7 @@ function pickNewChar() {
     setTimeout(() => {
         input.focus()
         input.click()
-    }, 100)
+    }, 10)
 }
 
 function toggleAnswer() {
