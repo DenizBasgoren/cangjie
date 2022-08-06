@@ -134,6 +134,17 @@
             margin-bottom: 130%;
         }
 
+        #speeddiv {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: white;
+        }
+
+        #speedhigh {
+            color: lightgreen;
+        }
+
         .yellow {
             color: gold;
         }
@@ -157,6 +168,11 @@
     </div>
     <img id=img1 src="cangjie-key.jpg" alt="[Cangjie Image 1]"/>
     <img id=img2 src="cangjie-key2.gif" alt="[Cangjie Image 2]"/>
+    <div id="speeddiv">
+        <span id="speed">Infinity</span>
+        HI:
+        <span id="speedhigh">Infinity</span>
+    </div>
 
     <form>
     <div id='input'>
@@ -186,7 +202,7 @@ input.oninput = e => {
 
 input.onkeypress = e => {
     if (e.code == 'Space') toggleAnswer()
-    if (e.code == 'Enter') pickNewChar()
+    // if (e.code == 'Enter') pickNewChar()
 }
 
 document.getElementById('nextbtn').onmousedown = e => {
@@ -199,7 +215,48 @@ window.onload = () => {
         input.focus()
         input.click()
     }, 1000)
+    document.getElementById('speedhigh').innerHTML = localStorage.speedhigh || 'Infinity'
 }
+
+let times = []
+function updateSpeed() {
+    let speed
+    if (times.length < 5) {
+        speed = 'Infinity'
+    }
+    else if (times.length < 10) {
+        let diffs = []
+        for (let i = 1; i<times.length; i++) {
+            diffs[i-1] = times[i]-times[i-1]
+        }
+        speed = String( (diffs.reduce((p,c) => p+c, 0) / diffs.length).toFixed(0) )
+    }
+    else {
+        let diffs = []
+        for (let i = times.length-9; i<times.length; i++) {
+            diffs[i-1] = times[i]-times[i-1]
+        }
+        speed = String( (diffs.reduce((p,c) => p+c, 0) / diffs.length).toFixed(0) )
+    }
+    let speedspan = document.getElementById('speed')
+    let highspan = document.getElementById('speedhigh')
+    speedspan.innerHTML = speed
+    if (speed != 'Infinity') {
+        if ( Number(highspan.innerHTML) > Number(speedspan.innerHTML) ) {
+            localStorage.speedhigh = highspan.innerHTML = speed
+            
+        }
+
+    }
+}
+function updateTimes() {
+    times.push( new Date() )
+    if (times.length == 100) {
+        times = [times[90], times[91], times[92], times[93], times[94], times[95], times[96], times[97], times[98], times[99]]
+    }
+}
+
+let firstChar = true
 
 let answerString, answerCangjie
 function pickNewChar() {
@@ -219,8 +276,14 @@ function pickNewChar() {
     //     input.focus()
     //     input.click()
     // }, 10)
+
+    if (!firstChar) {
+        updateTimes()
+        updateSpeed()
+    }
+    firstChar = false
 }
-10
+
 function toggleAnswer() {
     let s = document.getElementById('turtle')
     if (s.style.visibility == 'hidden') {
